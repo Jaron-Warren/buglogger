@@ -15,21 +15,43 @@ class BugService {
     return bug
   }
 
-  async create(body) {
-    const bug = await dbContext.Bugs.create(body)
-    return await dbContext.Bugs.findById(bug._id).populate('creator', 'name picture')
+  async getNotesById(id) {
+    const notes = await dbContext.Notes.find({ id: id }).populate('creator', 'bug')
+    return notes
   }
 
-  async update(body) {
+  async create(body) {
+    const bug = await dbContext.Bugs.create(body)
+    return await bug.populate('creator')
+  }
+
+  async edit(body) {
     const bug = await dbContext.Bugs.findById(body.id)
     if (!bug) {
       throw new BadRequest('Invalid Id')
+    }
+    if (bug.closed === true) {
+      throw new Forbidden('This bug entry is closed!')
     }
     // NOTE checks that the person requesting the object is the one who made it
     if (bug.creatorId.toString() !== body.creatorId) {
       throw new Forbidden('This is not your bug entry!')
     }
-    const afterUpdate = await dbContext.Bugs.findByIdAndUpdate(body.id, body, {})
+    const afterUpdate = await dbContext.Bugs.findByIdAndUpdate(body.id, body, { new: true })
+    return afterUpdate
+  }
+
+  async close(id, userId) {
+    const bug = await dbContext.Bugs.findById(id)
+    if (!bug) {
+      throw new BadRequest('Invalid Id')
+    }
+    // NOTE checks that the person requesting the object is the one who made it
+    if (bug.creatorId.toString() !== userId) {
+      throw new Forbidden('This is not your bug entry!')
+    }
+    bug.closed = true
+    const afterUpdate = await dbContext.Bugs.findByIdAndUpdate(id, bug, { new: true })
     return afterUpdate
   }
 }
