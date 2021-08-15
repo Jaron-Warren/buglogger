@@ -3,28 +3,32 @@
     <!-- <img src="/src/assets/img/computerBug.png" alt="Computer Bug" class="img-fluid"> -->
     <div class="col-12">
       <div class="row">
-        <div class="col-6 ">
-          <h1 class="text-secondary ttitle mb-3">
+        <div class="col-12 ">
+          <h1 class="ttitle mb-3">
             Bug Log:
           </h1>
         </div>
-        <div class="col-6"></div>
-        <h4 class="col-4 border-bottom">
+        <h4 class="col-4 border-bottom border-info bthick">
           Title
         </h4>
-        <h4 class="col-4 border-bottom">
+        <h4 class="col-4 border-bottom border-info bthick">
           Reported By
         </h4>
-        <h4 class="col-2 border-bottom">
+        <h4 class="col-2 border-bottom border-info bthick">
           Status
         </h4>
-        <h4 class="col-2 border-bottom">
+        <h4 class="col-2 border-bottom border-info bthick">
           Last Modified
         </h4>
       </div>
       <div class="row">
-        <div class="col-12 pt-3">
-          <h2>No Bugs Reported! <i class="mdi mdi-emoticon-cool"></i></h2>
+        <div class="col-12">
+          <h2 v-if="bugs.length == 0">
+            No Bugs Reported! <i class="mdi mdi-emoticon-cool"></i>
+          </h2>
+          <div v-for="b in bugs" :key="b.title">
+            <BugLogItem :bug="b" />
+          </div>
         </div>
       </div>
     </div>
@@ -32,8 +36,25 @@
 </template>
 
 <script>
+import { computed, onMounted } from '@vue/runtime-core'
+import Pop from '../utils/Notifier'
+import { AppState } from '../AppState'
+import { bugsService } from '../services/BugsService'
 export default {
-  name: 'Home'
+  name: 'Home',
+  setup() {
+    onMounted(async() => {
+      try {
+        bugsService.getAll()
+      } catch (error) {
+        Pop.toast(error, 'error')
+      }
+    })
+
+    return {
+      bugs: computed(() => AppState.bugs)
+    }
+  }
 }
 </script>
 
@@ -44,6 +65,9 @@ export default {
   > img{
     height: 200px;
     width: 200px;
+  }
+  h4 {
+    margin: 0;
   }
 }
 </style>

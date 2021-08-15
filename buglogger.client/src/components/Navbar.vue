@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-light navbar-expand-lg bg-grey border-bottom border-info">
+  <nav class="navbar navbar-dark navbar-expand-lg bg-grey border-bottom border-info">
     <button
       class="navbar-toggler"
       type="button"
@@ -12,12 +12,10 @@
       <span class="navbar-toggler-icon" />
     </button>
     <div class="collapse navbar-collapse justify-content-around" id="navbarText">
-      <router-link :to="{ name: 'Home' }">
-        <button class="btn btn-secondary border border-info text-info font-weight-bold">
-          Report New Bug
-          <i class="mdi mdi-bug"></i>
-        </button>
-      </router-link>
+      <button class="btn btn-secondary border border-info text-info font-weight-bold" data-toggle="modal" data-target="#createNewBug" v-if="user.isAuthenticated">
+        Report New Bug
+        <i class="mdi mdi-bug"></i>
+      </button>
       <router-link :to="{ name: 'Home' }">
         <button class="btn btn-secondary border border-info text-info font-weight-bold">
           <i class="mdi mdi-home"></i>
@@ -66,12 +64,14 @@
       </span>
     </div>
   </nav>
+  <CreateModal v-if="user.isAuthenticated" />
 </template>
 
 <script>
 import { AuthService } from '../services/AuthService'
 import { AppState } from '../AppState'
 import { computed, reactive } from 'vue'
+
 export default {
   setup() {
     const state = reactive({

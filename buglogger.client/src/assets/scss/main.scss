@@ -28,13 +28,18 @@ main {
 }
 
 .ttitle {
+  color: #fff;
   text-decoration: underline;
   text-decoration-style:dashed;
-  text-decoration-color:#6C63FF;
+  text-decoration-color:#EF6461;
 }
 
 .ftext {
   text-decoration: underline;
   text-decoration-style:wavy;
   text-decoration-color: #6C63FF;
+}
+
+.bthick {
+  border-width: 3px!important;
 }

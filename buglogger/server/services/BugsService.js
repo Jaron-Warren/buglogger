@@ -22,7 +22,7 @@ class BugService {
 
   async create(body) {
     const bug = await dbContext.Bugs.create(body)
-    return await bug.populate('creator')
+    return await dbContext.Bugs.findById(bug._id).populate('creator')
   }
 
   async edit(body) {
