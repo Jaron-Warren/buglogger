@@ -1,14 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <router-link class="navbar-brand d-flex" :to="{ name: 'Home' }">
-      <div class="d-flex flex-column align-items-center">
-        <img
-          alt="logo"
-          src="../assets/img/cw-logo.png"
-          height="45"
-        />
-      </div>
-    </router-link>
+  <nav class="navbar navbar-light navbar-expand-lg bg-grey border-bottom border-info">
     <button
       class="navbar-toggler"
       type="button"
@@ -20,19 +11,18 @@
     >
       <span class="navbar-toggler-icon" />
     </button>
-    <div class="collapse navbar-collapse" id="navbarText">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <router-link :to="{ name: 'Home' }" class="nav-link">
-            Home
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link :to="{ name: 'About' }" class="nav-link">
-            About
-          </router-link>
-        </li>
-      </ul>
+    <div class="collapse navbar-collapse justify-content-around" id="navbarText">
+      <router-link :to="{ name: 'Home' }">
+        <button class="btn btn-secondary border border-info text-info font-weight-bold">
+          Report New Bug
+          <i class="mdi mdi-bug"></i>
+        </button>
+      </router-link>
+      <router-link :to="{ name: 'Home' }">
+        <button class="btn btn-secondary border border-info text-info font-weight-bold">
+          <i class="mdi mdi-home"></i>
+        </button>
+      </router-link>
       <span class="navbar-text">
         <button
           class="btn btn-outline-primary text-uppercase"
@@ -42,7 +32,7 @@
           Login
         </button>
 
-        <div class="dropdown" v-else>
+        <div class="dropdown action" v-else>
           <div
             class="dropdown-toggle"
             @click="state.dropOpen = !state.dropOpen"

@@ -2,12 +2,12 @@
   <header>
     <Navbar />
   </header>
-  <main>
+  <main class="container-fluid bg-primary">
     <router-view />
   </main>
-  <footer>
-    <div class="bg-dark text-light text-center p-4">
-      Made with 💖 by CodeWorks
+  <footer class="bg-grey p-4 border-top border-info d-flex justify-content-around align-items-center">
+    <div class=" text-info text-left font-weight-bold mdi mdi-bug-outline">
+      Site by Jaron Warren
     </div>
   </footer>
 </template>
