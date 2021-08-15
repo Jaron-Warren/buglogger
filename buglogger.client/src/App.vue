@@ -6,7 +6,7 @@
     <router-view />
   </main>
   <footer class="bg-grey p-4 border-top border-info d-flex justify-content-around align-items-center">
-    <div class=" text-info text-left font-weight-bold mdi mdi-bug-outline">
+    <div class=" text-info text-left font-weight-bold mdi mdi-bug-outline ftext">
       Site by Jaron Warren
     </div>
   </footer>
