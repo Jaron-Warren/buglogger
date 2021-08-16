@@ -7,7 +7,7 @@ class BugsService {
   async getAll() {
     try {
       const res = await api.get('api/bugs/')
-      logger.log(res.data)
+      // logger.log(res.data)
       AppState.bugs = res.data
     } catch (error) {
       Pop.toast(error)
@@ -27,8 +27,9 @@ class BugsService {
   async create(bug) {
     try {
       const res = await api.post('api/bugs', bug)
-      logger.log(res.data)
+      // logger.log(res.data)
       AppState.bugs = [...AppState.bugs, res.data]
+      return res.data
     } catch (error) {
       Pop.toast(error)
     }
@@ -38,15 +39,16 @@ class BugsService {
     try {
       const res = await api.put(`api/bugs/${bug.id}`, bug)
       logger.log(res.data)
+      AppState.activeBug = res.data
     } catch (err) {
       Pop.toast(err)
     }
   }
 
-  async destroy(id) {
+  async close(id) {
     try {
       await api.delete(`api/bugs/${id}`)
-      AppState.bugs = AppState.bugs.filter(n => n.id !== id)
+      AppState.activeBug.closed = true
     } catch (error) {
       Pop.toast(error)
     }

@@ -1,17 +1,17 @@
 <template>
   <!-- Modal -->
   <div class="modal"
-       id="createNewBug"
+       :id="'editBug' + bug.id"
        tabindex="-1"
        role="dialog"
        aria-labelledby="modelTitleId"
        aria-hidden="true"
   >
-    <form class="modal-dialog" role="document" @submit.prevent="createBug">
+    <form class="modal-dialog" role="document" @submit.prevent="editBug">
       <div class="modal-content">
         <div class="modal-header bg-dark bcolor bthick">
           <h2 class="modal-title">
-            Report Bug
+            Edit
           </h2>
           <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -28,7 +28,7 @@
               <input type="text"
                      class="form-control"
                      placeholder="Title..."
-                     v-model="state.newBug.title"
+                     v-model="state.edit.title"
                      minlength="4"
                      maxlength="20"
                      required
@@ -39,7 +39,7 @@
               <textarea type="text"
                         class="form-control"
                         placeholder="Bug description..."
-                        v-model="state.newBug.description"
+                        v-model="state.edit.description"
                         rows="8"
                         minlength="20"
                         maxlength="300"
@@ -53,7 +53,7 @@
             Close
           </button>
           <button type="submit" class="btn btn-success">
-            create
+            Confirm
           </button>
         </div>
       </div>
@@ -63,24 +63,36 @@
 
 <script>
 import { reactive } from '@vue/reactivity'
-import { bugsService } from '../services/BugsService'
 import { AppState } from '../AppState'
 import { computed } from '@vue/runtime-core'
-import { router } from '../router'
+import Pop from '../utils/Notifier'
+import { bugsService } from '../services/BugsService'
 
 export default {
+  props: {
+    bug: {
+      type: Object,
+      required: true
+    }
+  },
+  // REVIEW passing props into state? I tried to put the initial value of v-model as bug.title and description.
   setup() {
     const state = reactive({
-      newBug: {}
+      edit: {}
     })
     return {
       state,
       account: computed(() => AppState.account),
       user: computed(() => AppState.user),
-      async createBug() {
-        const createdBug = await bugsService.create(state.newBug)
-        state.newBug = {}
-        router.push({ name: 'BugDetails', params: { id: createdBug._id } })
+      async editBug() {
+        try {
+          AppState.activeBug.title = state.edit.title
+          AppState.activeBug.description = state.edit.description
+          state.edit = {}
+          bugsService.editbug(AppState.activeBug)
+        } catch (error) {
+          Pop.toast(error)
+        }
       }
     }
   }

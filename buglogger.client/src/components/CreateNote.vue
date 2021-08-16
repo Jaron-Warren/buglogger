@@ -29,8 +29,6 @@
                      class="form-control"
                      placeholder="Title..."
                      v-model="state.newBug.title"
-                     minlength="4"
-                     maxlength="20"
                      required
               >
             </div>
@@ -41,8 +39,6 @@
                         placeholder="Bug description..."
                         v-model="state.newBug.description"
                         rows="8"
-                        minlength="20"
-                        maxlength="300"
                         required
               />
             </div>

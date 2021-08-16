@@ -37,7 +37,7 @@ class BugService {
     if (bug.creatorId.toString() !== body.creatorId) {
       throw new Forbidden('This is not your bug entry!')
     }
-    const afterUpdate = await dbContext.Bugs.findByIdAndUpdate(body.id, body, { new: true })
+    const afterUpdate = await dbContext.Bugs.findByIdAndUpdate(body.id, body, { new: true }).populate('creator')
     return afterUpdate
   }
 

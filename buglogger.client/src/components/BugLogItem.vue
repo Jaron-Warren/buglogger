@@ -1,10 +1,16 @@
 <template>
-  <div class="BugLogItem row bg-secondary">
+  <div class="
+               bug-log-item
+               row
+               bg-secondary"
+  >
     <div class="col-4 border border-info bthick">
-      {{ bug.title }}
+      <router-link :to="{ name: 'BugDetails', params: {id: bug._id} }">
+        {{ bug.title }}
+      </router-link>
     </div>
     <div class="col-4 border border-info bthick">
-      <img :src="bug.creator.picture" alt="picture" class="mr-2">
+      <img :src="bug.creator.picture" alt="picture" class="mr-3 my-2">
       {{ bug.creator.name }}
     </div>
     <div class="col-2 border border-info bthick">
@@ -18,6 +24,7 @@
 </template>
 
 <script>
+import { AppState } from '../AppState'
 export default {
   props: {
     bug: {
@@ -25,7 +32,7 @@ export default {
       required: true
     }
   },
-  setup() {
+  setup(props) {
     return {
       formatDate(date) {
         const datesplit = date.slice(0, 10).split('-')
