@@ -1,6 +1,6 @@
 <template>
   <div class="BugDetailsPage flex-grow-1 row">
-    <div class="col-md-6 mt-3 d-flex flex-column">
+    <div class="col-md-5 mt-3 d-flex flex-column">
       <div>Title:</div>
       <h1>
         {{ bug.title }}
@@ -9,9 +9,10 @@
         <img :src="bug.creator.picture" alt="picture" class="mr-3 my-2">
         {{ bug.creator.name }}
       </div>
-      <button class="btn btn-warning mx-auto mt-auto mb-2" v-if="!bug.closed && bug.creatorId === account.id" data-toggle="modal" :data-target="'#editBug' + bug.id">
+      <button class="btn btn-warning mx-auto mt-auto mb-2" v-if="!bug.closed && bug.creatorId === account.id" data-toggle="modal" :data-target="'#editBugModal' + bug.id">
         Edit Bug Report
       </button>
+      <EditBug :bug="bug" />
     </div>
     <div class="col-md-4 d-flex align-items-end">
       <img src="/src/assets/img/computerBug.png" alt="Computer Bug">
@@ -19,7 +20,7 @@
         Close Bug Report
       </button>
     </div>
-    <div class="col-md-2 d-flex flex-column mt-3">
+    <div class="col-md-3 d-flex flex-column mt-3">
       <div v-if="bug.createdAt">
         <span>Created: {{ formatDate(bug.createdAt) }}</span>
         <br>
@@ -29,9 +30,30 @@
         Status:<span v-if="!bug.closed" class="text-success text-large font-weight-bold ml-2">Open</span><span v-if="bug.closed" class="text-danger font-weight-bold text-large ml-2">Closed</span>
       </div>
     </div>
-    <EditBug :bug="bug" />
-    <div class="col-12 border bthick border-info mt-2 bg-secondary">
+    <div class="col-12 border bthick border-info mt-2 mb-5 bg-secondary">
       <b class="mr-4">Description: </b> {{ bug.description }}
+    </div>
+    <div class="col-12 d-flex">
+      <h2 class="mt-auto">
+        Notes
+      </h2>
+      <button class="btn btn-success px-5 ml-4 mt-auto mb-2" data-toggle="modal" :data-target="'#createNewNote'+bug.id">
+        Add
+      </button>
+    </div>
+    <CreateNote :bug="bug" />
+    <div class="col-12 border bthick border-info mt-2 bg-secondary">
+      <div class="row">
+        <h3 class="col-3 border-bottom border-info">
+          Name
+        </h3>
+        <h3 class="col-8 border-bottom border-info">
+          Message
+        </h3>
+        <h3 class="col-1 border-bottom border-info">
+          Delete
+        </h3>
+      </div>
     </div>
   </div>
 </template>
@@ -63,9 +85,9 @@ export default {
       account: computed(() => AppState.account),
       user: computed(() => AppState.user),
       bug: computed(() => AppState.activeBug),
-      closeBug() {
+      async closeBug() {
         // REVIEW confirm doesn't work
-        if (Pop.confirm('Are you sure?', 'this can\'t be undone!', 'warning', 'Close forever')) {
+        if (await Pop.confirm('Are you sure?', 'this can\'t be undone!', 'warning', 'Close forever')) {
           bugsService.close(this.bug.id)
         }
         state.newBug = {}

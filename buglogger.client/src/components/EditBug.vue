@@ -1,7 +1,7 @@
 <template>
   <!-- Modal -->
   <div class="modal"
-       :id="'editBug' + bug.id"
+       :id="'editBugModal' + bug.id"
        tabindex="-1"
        role="dialog"
        aria-labelledby="modelTitleId"
@@ -11,7 +11,7 @@
       <div class="modal-content">
         <div class="modal-header bg-dark bcolor bthick">
           <h2 class="modal-title">
-            Edit
+            Edit Bug Report
           </h2>
           <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -67,6 +67,7 @@ import { AppState } from '../AppState'
 import { computed } from '@vue/runtime-core'
 import Pop from '../utils/Notifier'
 import { bugsService } from '../services/BugsService'
+import $ from 'jquery'
 
 export default {
   props: {
@@ -76,9 +77,10 @@ export default {
     }
   },
   // REVIEW passing props into state? I tried to put the initial value of v-model as bug.title and description.
-  setup() {
+  setup(props) {
     const state = reactive({
-      edit: {}
+      edit: {
+      }
     })
     return {
       state,
@@ -86,10 +88,12 @@ export default {
       user: computed(() => AppState.user),
       async editBug() {
         try {
-          AppState.activeBug.title = state.edit.title
-          AppState.activeBug.description = state.edit.description
+          bugsService.editbug(state.edit, props.bug.id)
           state.edit = {}
-          bugsService.editbug(AppState.activeBug)
+          // modal close
+          $('#editBugModal' + props.bug.id).modal('hide')
+          $('body').removeClass('modal-open')
+          $('.modal-backdrop').remove()
         } catch (error) {
           Pop.toast(error)
         }

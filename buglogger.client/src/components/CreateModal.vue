@@ -67,6 +67,7 @@ import { bugsService } from '../services/BugsService'
 import { AppState } from '../AppState'
 import { computed } from '@vue/runtime-core'
 import { router } from '../router'
+import $ from 'jquery'
 
 export default {
   setup() {
@@ -81,6 +82,9 @@ export default {
         const createdBug = await bugsService.create(state.newBug)
         state.newBug = {}
         router.push({ name: 'BugDetails', params: { id: createdBug._id } })
+        $('#createNewBug').modal('hide')
+        $('body').removeClass('modal-open')
+        $('.modal-backdrop').remove()
       }
     }
   }

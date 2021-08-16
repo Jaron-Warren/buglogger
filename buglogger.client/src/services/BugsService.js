@@ -35,9 +35,9 @@ class BugsService {
     }
   }
 
-  async editbug(bug) {
+  async editbug(bug, id) {
     try {
-      const res = await api.put(`api/bugs/${bug.id}`, bug)
+      const res = await api.put(`api/bugs/${id}`, bug)
       logger.log(res.data)
       AppState.activeBug = res.data
     } catch (err) {

@@ -1,17 +1,17 @@
 <template>
   <!-- Modal -->
   <div class="modal"
-       id="createNewBug"
+       :id="'createNewNote'+bug.id"
        tabindex="-1"
        role="dialog"
        aria-labelledby="modelTitleId"
        aria-hidden="true"
   >
-    <form class="modal-dialog" role="document" @submit.prevent="createBug">
+    <form class="modal-dialog" role="document" @submit.prevent="createNote">
       <div class="modal-content">
         <div class="modal-header bg-dark bcolor bthick">
           <h2 class="modal-title">
-            Report Bug
+            Add Note
           </h2>
           <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
@@ -24,21 +24,14 @@
               {{ account.name }}
             </div>
             <div class="form-group">
-              <label class="pr-2" for="title">Title:</label>
-              <input type="text"
-                     class="form-control"
-                     placeholder="Title..."
-                     v-model="state.newBug.title"
-                     required
-              >
-            </div>
-            <div class="form-group">
-              <label class="pr-2" for="description">Description</label>
+              <label class="pr-2" for="description">Note</label>
               <textarea type="text"
                         class="form-control"
-                        placeholder="Bug description..."
-                        v-model="state.newBug.description"
+                        placeholder="Note..."
+                        v-model="state.newNote.body"
                         rows="8"
+                        minlength="5"
+                        maxlength="100"
                         required
               />
             </div>
@@ -49,7 +42,7 @@
             Close
           </button>
           <button type="submit" class="btn btn-success">
-            create
+            Add
           </button>
         </div>
       </div>
@@ -59,24 +52,32 @@
 
 <script>
 import { reactive } from '@vue/reactivity'
-import { bugsService } from '../services/BugsService'
 import { AppState } from '../AppState'
 import { computed } from '@vue/runtime-core'
-import { router } from '../router'
+import { notesService } from '../services/NotesService'
+import $ from 'jquery'
 
 export default {
-  setup() {
+  props: {
+    bug: {
+      type: Object,
+      required: true
+    }
+  },
+  setup(props) {
     const state = reactive({
-      newBug: {}
+      newNote: {}
     })
     return {
       state,
       account: computed(() => AppState.account),
       user: computed(() => AppState.user),
-      async createBug() {
-        const createdBug = await bugsService.create(state.newBug)
-        state.newBug = {}
-        router.push({ name: 'BugDetails', params: { id: createdBug._id } })
+      async createNote() {
+        await notesService.create(state.newNote)
+        state.newNote = {}
+        $('#createNewNote' + props.bug.id).modal('hide')
+        $('body').removeClass('modal-open')
+        $('.modal-backdrop').remove()
       }
     }
   }
