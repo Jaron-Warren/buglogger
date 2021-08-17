@@ -1,8 +1,8 @@
 <template>
-  <div class="BugDetailsPage flex-grow-1 row">
+  <div class="BugDetailsPage flex-grow-1 row justify-content-center">
     <div class="col-md-5 mt-3 d-flex flex-column">
       <div>Title:</div>
-      <h1>
+      <h1 class="ul">
         {{ bug.title }}
       </h1>
       <div class="mt-auto" v-if="bug.creator">
@@ -30,29 +30,30 @@
         Status:<span v-if="!bug.closed" class="text-success text-large font-weight-bold ml-2">Open</span><span v-if="bug.closed" class="text-danger font-weight-bold text-large ml-2">Closed</span>
       </div>
     </div>
-    <div class="col-12 border bthick border-info mt-2 mb-5 bg-secondary">
+    <div class="col-11 border bthick border-info pb-5 mt-2 mb-5 bg-secondary">
       <b class="mr-4">Description: </b> {{ bug.description }}
     </div>
     <div class="col-12 d-flex">
       <h2 class="mt-auto">
-        Notes
+        Notes:
       </h2>
-      <button class="btn btn-success px-5 ml-4 mt-auto mb-2" data-toggle="modal" :data-target="'#createNewNote'+bug.id">
+      <button class="btn btn-success px-5 ml-4 mt-auto mb-2" data-toggle="modal" :data-target="'#createNewNote'+bug.id" v-if="user.isAuthenticated">
         Add
       </button>
     </div>
     <CreateNote :bug="bug" />
-    <div class="col-12 border bthick border-info mt-2 bg-secondary">
+    <div class="col-11 border bthick border-info mt-2 pb-4 bg-secondary">
       <div class="row">
-        <h3 class="col-3 border-bottom border-info">
-          Name
-        </h3>
-        <h3 class="col-8 border-bottom border-info">
-          Message
-        </h3>
-        <h3 class="col-1 border-bottom border-info">
-          Delete
-        </h3>
+        <div v-if="!notes.length == 0">
+          <div v-for="n in notes" :key="n.id">
+            <NoteItem :note="n" />
+          </div>
+        </div>
+        <div class="col-11" v-else>
+          Nothing to show here...
+          <br>
+          <i class="mdi mdi-comment-processing"></i> add a note!
+        </div>
       </div>
     </div>
   </div>
@@ -65,6 +66,7 @@ import { AppState } from '../AppState'
 import { computed, onMounted } from '@vue/runtime-core'
 import { router } from '../router'
 import Pop from '../utils/Notifier'
+import { notesService } from '../services/NotesService'
 
 export default {
   name: 'BugDetailsPage',
@@ -76,6 +78,7 @@ export default {
       // REVIEW why does router.params.id not work? Why does $route.params.id return undefined? (it works in html template)
       try {
         await bugsService.getById(router.currentRoute.value.params.id)
+        await notesService.getById(router.currentRoute.value.params.id)
       } catch (error) {
         Pop.toast(error)
       }
@@ -85,8 +88,8 @@ export default {
       account: computed(() => AppState.account),
       user: computed(() => AppState.user),
       bug: computed(() => AppState.activeBug),
+      notes: computed(() => AppState.notes),
       async closeBug() {
-        // REVIEW confirm doesn't work
         if (await Pop.confirm('Are you sure?', 'this can\'t be undone!', 'warning', 'Close forever')) {
           bugsService.close(this.bug.id)
         }
@@ -107,5 +110,8 @@ img{
   }
 .text-large {
   font-size: 2rem;
+}
+.ul {
+  text-decoration: underline;
 }
 </style>

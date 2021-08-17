@@ -14,10 +14,10 @@
         <h4 class="col-4 border-bottom border-info bthick">
           Reported By
         </h4>
-        <h4 class="col-2 border-bottom border-info bthick">
+        <h4 class="col-4 col-md-2 border-bottom border-info bthick">
           Status
         </h4>
-        <h4 class="col-2 border-bottom border-info bthick">
+        <h4 class="col-0 col-md-2 d-none d-md-block border-bottom border-info bthick">
           Last Modified
         </h4>
       </div>

@@ -16,7 +16,7 @@ class BugService {
   }
 
   async getNotesById(id) {
-    const notes = await dbContext.Notes.find({ bugId: id }).populate('creator', 'bug')
+    const notes = await dbContext.Notes.find({ bugId: id }).populate('creator')
     return notes
   }
 

@@ -66,15 +66,18 @@ export default {
   },
   setup(props) {
     const state = reactive({
-      newNote: {}
+      newNote: {
+      }
     })
     return {
       state,
       account: computed(() => AppState.account),
       user: computed(() => AppState.user),
       async createNote() {
+        state.newNote.bugId = props.bug.id
+        console.log(state.newNote)
         await notesService.create(state.newNote)
-        state.newNote = {}
+        state.newNote.body = ''
         $('#createNewNote' + props.bug.id).modal('hide')
         $('body').removeClass('modal-open')
         $('.modal-backdrop').remove()

@@ -26,7 +26,8 @@ class NotesService {
 
   async destroy(id) {
     try {
-      await api.delete(`api/notes/${id}`)
+      const res = await api.delete(`api/notes/${id}`)
+      // logger.log(res.data)
       AppState.notes = AppState.notes.filter(n => n.id !== id)
     } catch (error) {
       Pop.toast(error)

@@ -11,13 +11,13 @@
     </div>
     <div class="col-4 border border-info bthick">
       <img :src="bug.creator.picture" alt="picture" class="mr-3 my-2">
-      {{ bug.creator.name }}
+      <span class="d-none d-md-block">{{ bug.creator.name }}</span>
     </div>
-    <div class="col-2 border border-info bthick">
+    <div class="col-4 col-md-2 border border-info bthick">
       <span v-if="!bug.closed" class="text-success font-weight-bold">Open</span>
       <span v-if="bug.closed" class="text-danger font-weight-bold">Closed</span>
     </div>
-    <div class="col-2 border border-info bthick">
+    <div class="col-0 col-md-2 d-none d-md-block border border-info bthick">
       {{ formatDate(bug.updatedAt) }}
     </div>
   </div>
