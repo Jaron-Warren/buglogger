@@ -48,4 +48,7 @@ export default {
 img {
   height: 6vh;
 }
+a {
+  color: white;
+}
 </style>
