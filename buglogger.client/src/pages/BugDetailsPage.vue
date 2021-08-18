@@ -1,5 +1,5 @@
 <template>
-  <div class="BugDetailsPage flex-grow-1 row justify-content-center">
+  <div class="BugDetailsPage flex-grow-1 row justify-content-center" v-if="bug.id">
     <div class="col-md-5 mt-3 d-flex flex-column">
       <div>Title:</div>
       <h1 class="ul">
